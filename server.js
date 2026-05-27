@@ -27,7 +27,7 @@ const hbs = exphbs.create({
 });
 
 app.engine('hbs', hbs.engine);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'Views'));
 app.set('view engine', 'hbs');
 
 // Health check
@@ -80,13 +80,8 @@ app.post('/generate-report', (req, res) => {
     };
 
     // Render template
-    const html = hbs.engine(
-      path.join(__dirname, 'views/report.hbs'),
-      reportData,
-      { layout: false }
-    );
-
-    res.type('text/html').send(html);
+    res.render('report', reportData);
+     
   } catch (error) {
     console.error('Error generating report:', error);
     res.status(500).json({ 
