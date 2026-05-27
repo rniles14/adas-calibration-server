@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADAS Calibration Report - {{vehicle.make}} {{vehicle.model}} {{vehicle.year}}</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: A4;
+      margin: 0.5in;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: #0a131e;
+      background: #ffffff;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .report {
+      max-width: 100%;
+      background: #ffffff;
+    }
+
+    /* HEADER */
+    .header {
+      background: #0a131e;
+      color: #ffffff;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      page-break-after: avoid;
+      margin-bottom: 0;
+    }
+
+    .logo {
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .header-content {
+      flex: 1;
+    }
+
+    .header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 32px;
+      font-weight: 600;
+      color: #f1b82d;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    /* VEHICLE INFO */
+    .vehicle-info {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+      padding: 2rem;
+      border-bottom: 2px solid #f1b82d;
+      background: #f9f9f9;
+      page-break-after: avoid;
+      margin: 0;
+    }
+
+    .info-item {
+      padding: 0;
+    }
+
+    .info-label {
+      font-size: 11px;
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0a131e;
+    }
+
+    /* ADAS SYSTEMS SECTION */
+    .adas-systems-section {
+      padding: 2rem;
+      border-bottom: 1px solid #e0e0e0;
+      page-break-inside: avoid;
+      margin: 0;
+    }
+
+    .adas-systems-section h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0a131e;
+      margin: 0 0 1.5rem 0;
+      border-bottom: 3px solid #f1b82d;
+      padding-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    .systems-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .systems-list {
+      margin: 0;
+      padding: 0;
+    }
+
+    .systems-list h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0a131e;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .systems-list ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .systems-list li {
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      position: relative;
+      font-size: 14px;
+      color: #0a131e;
+    }
+
+    .systems-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #f1b82d;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* SUMMARY CARDS */
+    .section {
+      padding: 2rem;
+      border-bottom: 1px solid #e0e0e0;
+      page-break-inside: avoid;
+      margin: 0;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0a131e;
+      margin: 0 0 1.5rem 0;
+      border-bottom: 3px solid #f1b82d;
+      padding-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 0;
+      page-break-inside: avoid;
+    }
+
+    .card {
+      background: #f1b82d;
+      color: #0a131e;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin: 0;
+    }
+
+    .card-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* CALIBRATIONS SECTION */
+    .calibrations-list {
+      margin: 0;
+    }
+
+    .calibration-item {
+      background: #f9f9f9;
+      border-left: 4px solid #f1b82d;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      border-radius: 4px;
+      page-break-inside: avoid;
+    }
+
+    .calibration-item h3 {
+      margin: 0 0 0.75rem 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0a131e;
+    }
+
+    .calibration-type {
+      display: inline-block;
+      background: #0a131e;
+      color: #f1b82d;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      border: 1px solid #f1b82d;
+    }
+
+    .detail-row {
+      display: flex;
+      gap: 1.5rem;
+      margin: 0.75rem 0;
+      font-size: 14px;
+    }
+
+    .detail-label {
+      color: #666;
+      min-width: 120px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .detail-value {
+      color: #0a131e;
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    /* SEQUENCE SECTION */
+    .sequence-list {
+      margin: 0;
+    }
+
+    .sequence-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 14px;
+      page-break-inside: avoid;
+    }
+
+    .sequence-num {
+      background: #f1b82d;
+      color: #0a131e;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .sequence-text {
+      padding-top: 4px;
+      color: #0a131e;
+    }
+
+    /* TABLE - SYSTEMS NOT TRIGGERED */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 1.25rem;
+      page-break-inside: avoid;
+    }
+
+    th {
+      background: #f1b82d;
+      color: #0a131e;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      border: 1px solid #e0e0e0;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e0e0;
+      color: #0a131e;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding: 2rem;
+      background: #0a131e;
+      color: #ffffff;
+      border-top: 1px solid #e0e0e0;
+      font-size: 13px;
+      page-break-before: avoid;
+      margin-top: 2rem;
+    }
+
+    .footer p {
+      margin: 0.75rem 0;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    .footer strong {
+      color: #f1b82d;
+    }
+
+    .icar-link {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: #f1b82d;
+      color: #0a131e;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        background: white;
+      }
+      .report {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .section {
+        page-break-inside: avoid;
+      }
+      .calibration-item {
+        page-break-inside: avoid;
+      }
+      .sequence-item {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <img src="https://res.cloudinary.com/dk64e0k8t/image/upload/v1775582262/Adas_logo_2_transparent.png_1_fcjm2x.png" alt="ADAS Logo">
+    </div>
+    <div class="header-content">
+      <h1>ADAS Calibration Report</h1>
+      <p>Professional post-repair calibration requirements and recommendations</p>
+    </div>
+  </div>
+
+  <!-- VEHICLE INFO -->
+  <div class="vehicle-info">
+    <div class="info-item">
+      <div class="info-label">VIN</div>
+      <div class="info-value">{{vehicle.vin}}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Year</div>
+      <div class="info-value">{{vehicle.year}}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Make</div>
+      <div class="info-value">{{vehicle.make}}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Model</div>
+      <div class="info-value">{{vehicle.model}}</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">I-CAR Reference</div>
+      <div class="info-value">{{vehicle.icar_article}}</div>
+    </div>
+  </div>
+
+  <!-- ADAS SYSTEMS PRESENT -->
+  {{#if adas_systems_present}}
+  <div class="adas-systems-section">
+    <h2>Vehicle ADAS & Safety Systems</h2>
+    <div class="systems-grid">
+      {{#if adas_systems_present}}
+      <div class="systems-list">
+        <h3>ADAS Systems Equipped</h3>
+        <ul>
+          {{#each adas_systems_present}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+      {{#if safety_systems_present}}
+      <div class="systems-list">
+        <h3>Safety Systems Equipped</h3>
+        <ul>
+          {{#each safety_systems_present}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+    </div>
+    {{#if brake_systems}}
+    <div class="systems-list" style="margin-top: 2rem;">
+      <h3>Brake Systems Equipped</h3>
+      <ul>
+        {{#each brake_systems}}
+        <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  <!-- SUMMARY CARDS -->
+  <div class="section">
+    <h2>Calibration Summary</h2>
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-value">{{calibrations_required.length}}</div>
+        <div class="card-label">Total Calibrations</div>
+      </div>
+      <div class="card">
+        <div class="card-value">{{static_calibrations_count}}</div>
+        <div class="card-label">Static Calibrations</div>
+      </div>
+      <div class="card">
+        <div class="card-value">{{dynamic_calibrations_count}}</div>
+        <div class="card-label">Dynamic Calibrations</div>
+      </div>
+      <div class="card">
+        <div class="card-value">{{aim_calibrations_count}}</div>
+        <div class="card-label">Aim / Mechanical</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALIBRATIONS REQUIRED -->
+  {{#if calibrations_required}}
+  <div class="section">
+    <h2>Calibrations Required</h2>
+    <div class="calibrations-list">
+      {{#each calibrations_required}}
+      <div class="calibration-item">
+        <h3>{{this.system}}</h3>
+        {{#if this.calibration_type}}
+        <span class="calibration-type">{{this.calibration_type}}</span>
+        {{/if}}
+        {{#if this.trigger}}
+        <div class="detail-row">
+          <span class="detail-label">Triggered by:</span>
+          <span class="detail-value">{{this.trigger}}</span>
+        </div>
+        {{/if}}
+        {{#if this.icar_requirement}}
+        <div class="detail-row">
+          <span class="detail-label">Requirement:</span>
+          <span class="detail-value">{{this.icar_requirement}}</span>
+        </div>
+        {{/if}}
+        {{#if this.notes}}
+        <div class="detail-row">
+          <span class="detail-label">Notes:</span>
+          <span class="detail-value">{{this.notes}}</span>
+        </div>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <!-- RECOMMENDED SEQUENCE -->
+  {{#if recommended_sequence}}
+  <div class="section">
+    <h2>Recommended Calibration Sequence</h2>
+    <div class="sequence-list">
+      {{#each recommended_sequence}}
+      <div class="sequence-item">
+        <div class="sequence-num">{{inc @index}}</div>
+        <div class="sequence-text">{{this}}</div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <!-- SYSTEMS NOT TRIGGERED -->
+  {{#if calibrations_not_triggered}}
+  <div class="section">
+    <h2>Systems Not Triggered by This Repair</h2>
+    <p style="color: #666; margin-bottom: 1.5rem; font-size: 14px;">The following ADAS/safety systems are equipped on this vehicle but are not affected by this repair:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>System Name</th>
+          <th>Reason Not Triggered</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each calibrations_not_triggered}}
+        <tr>
+          <td><strong>{{this.system}}</strong></td>
+          <td>{{this.reason}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{/if}}
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p><strong>I-CAR Reference:</strong> {{vehicle.icar_article}}</p>
+    <p style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards. The technician is responsible for verifying all procedures and confirming system functionality prior to returning the vehicle to the customer. Calibration requirements may vary based on specific vehicle trim level and equipment.</p>
+    <p style="margin-top: 1rem;">Report generated: {{generated_date}} | Version: {{report_version}}</p>
+  </div>
+
+</div>
+
+</body>
+</html>
