@@ -20,7 +20,7 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
       color: #0a131e;
       background: #ffffff;
-      line-height: 1.6;
+      line-height: 1.35;
       margin: 0;
       padding: 0;
     }
@@ -34,17 +34,17 @@
     .header {
       background: #0a131e;
       color: #ffffff;
-      padding: 2rem;
+      padding: 1.25rem 1.5rem;
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: 1.25rem;
       page-break-after: avoid;
       margin-bottom: 0;
     }
 
     .logo {
-      width: 140px;
-      height: 140px;
+      width: 92px;
+      height: 92px;
       flex-shrink: 0;
     }
 
@@ -60,14 +60,14 @@
 
     .header h1 {
       margin: 0 0 0.5rem 0;
-      font-size: 32px;
+      font-size: 26px;
       font-weight: 600;
       color: #f1b82d;
     }
 
     .header p {
       margin: 0;
-      font-size: 15px;
+      font-size: 11px;
       opacity: 0.9;
     }
 
@@ -75,8 +75,8 @@
     .vehicle-info {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 1.5rem;
-      padding: 2rem;
+      gap: 0.9rem;
+      padding: 1rem 1.5rem;
       border-bottom: 2px solid #f1b82d;
       background: #f9f9f9;
       page-break-after: avoid;
@@ -93,37 +93,38 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
     }
 
     .info-value {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 600;
       color: #0a131e;
+      word-break: break-word;
     }
 
     /* ADAS SYSTEMS SECTION */
     .adas-systems-section {
-      padding: 2rem;
+      padding: 1.25rem 1.5rem;
       border-bottom: 1px solid #e0e0e0;
       page-break-inside: avoid;
       margin: 0;
     }
 
     .adas-systems-section h2 {
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
       color: #0a131e;
-      margin: 0 0 1.5rem 0;
-      border-bottom: 3px solid #f1b82d;
-      padding-bottom: 0.75rem;
+      margin: 0 0 0.85rem 0;
+      border-bottom: 2px solid #f1b82d;
+      padding-bottom: 0.4rem;
       display: inline-block;
     }
 
     .systems-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 1rem;
     }
 
     .systems-list {
@@ -135,7 +136,7 @@
       font-size: 14px;
       font-weight: 600;
       color: #0a131e;
-      margin-bottom: 1rem;
+      margin-bottom: 0.45rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -147,9 +148,9 @@
     }
 
     .systems-list li {
-      padding: 0.5rem 0 0.5rem 1.5rem;
+      padding: 0.18rem 0 0.18rem 1rem;
       position: relative;
-      font-size: 14px;
+      font-size: 12px;
       color: #0a131e;
     }
 
@@ -159,31 +160,35 @@
       left: 0;
       color: #f1b82d;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 13px;
+    }
+
+    .systems-list.compact-system-block {
+      margin-top: 0.75rem !important;
     }
 
     /* SUMMARY CARDS */
     .section {
-      padding: 2rem;
+      padding: 1.25rem 1.5rem;
       border-bottom: 1px solid #e0e0e0;
       page-break-inside: avoid;
       margin: 0;
     }
 
     .section h2 {
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
       color: #0a131e;
-      margin: 0 0 1.5rem 0;
-      border-bottom: 3px solid #f1b82d;
-      padding-bottom: 0.75rem;
+      margin: 0 0 0.85rem 0;
+      border-bottom: 2px solid #f1b82d;
+      padding-bottom: 0.4rem;
       display: inline-block;
     }
 
     .summary-cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      gap: 0.75rem;
       margin-bottom: 0;
       page-break-inside: avoid;
     }
@@ -191,22 +196,22 @@
     .card {
       background: #f1b82d;
       color: #0a131e;
-      padding: 1.5rem;
-      border-radius: 8px;
+      padding: 0.85rem;
+      border-radius: 6px;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       margin: 0;
     }
 
     .card-value {
-      font-size: 32px;
+      font-size: 24px;
       font-weight: 700;
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.15rem 0;
     }
 
     .card-label {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 10px;
+      font-weight: 700;
       margin: 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -220,15 +225,15 @@
     .calibration-item {
       background: #f9f9f9;
       border-left: 4px solid #f1b82d;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.75rem;
       border-radius: 4px;
       page-break-inside: avoid;
     }
 
     .calibration-item h3 {
-      margin: 0 0 0.75rem 0;
-      font-size: 16px;
+      margin: 0 0 0.4rem 0;
+      font-size: 14px;
       font-weight: 600;
       color: #0a131e;
     }
@@ -237,24 +242,24 @@
       display: inline-block;
       background: #0a131e;
       color: #f1b82d;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 3px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 1rem;
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 0.55rem;
       border: 1px solid #f1b82d;
     }
 
     .detail-row {
       display: flex;
-      gap: 1.5rem;
-      margin: 0.75rem 0;
-      font-size: 14px;
+      gap: 0.75rem;
+      margin: 0.35rem 0;
+      font-size: 12px;
     }
 
     .detail-label {
       color: #666;
-      min-width: 120px;
+      min-width: 95px;
       font-weight: 600;
       flex-shrink: 0;
     }
@@ -262,7 +267,7 @@
     .detail-value {
       color: #0a131e;
       flex: 1;
-      line-height: 1.5;
+      line-height: 1.35;
     }
 
     /* SEQUENCE SECTION */
@@ -272,29 +277,29 @@
 
     .sequence-item {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      font-size: 14px;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      font-size: 12px;
       page-break-inside: avoid;
     }
 
     .sequence-num {
       background: #f1b82d;
       color: #0a131e;
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 700;
       flex-shrink: 0;
       margin: 0;
     }
 
     .sequence-text {
-      padding-top: 4px;
+      padding-top: 2px;
       color: #0a131e;
     }
 
@@ -302,22 +307,22 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
-      margin-top: 1.25rem;
+      font-size: 12px;
+      margin-top: 0.75rem;
       page-break-inside: avoid;
     }
 
     th {
       background: #f1b82d;
       color: #0a131e;
-      padding: 1rem;
+      padding: 0.55rem 0.65rem;
       text-align: left;
       font-weight: 600;
       border: 1px solid #e0e0e0;
     }
 
     td {
-      padding: 1rem;
+      padding: 0.55rem 0.65rem;
       border-bottom: 1px solid #e0e0e0;
       color: #0a131e;
     }
@@ -328,7 +333,7 @@
 
     /* FOOTER */
     .footer {
-      padding: 2rem;
+      padding: 1.25rem 1.5rem;
       background: #0a131e;
       color: #ffffff;
       border-top: 1px solid #e0e0e0;
@@ -338,9 +343,9 @@
     }
 
     .footer p {
-      margin: 0.75rem 0;
+      margin: 0.45rem 0;
       color: #ffffff;
-      line-height: 1.6;
+      line-height: 1.35;
     }
 
     .footer strong {
@@ -449,7 +454,7 @@
       {{/if}}
     </div>
     {{#if brake_systems}}
-    <div class="systems-list" style="margin-top: 2rem;">
+    <div class="systems-list compact-system-block">
       <h3>Brake Systems Equipped</h3>
       <ul>
         {{#each brake_systems}}
@@ -538,7 +543,7 @@
   {{#if calibrations_not_triggered}}
   <div class="section">
     <h2>Systems Not Triggered by This Repair</h2>
-    <p style="color: #666; margin-bottom: 1.5rem; font-size: 14px;">The following ADAS/safety systems are equipped on this vehicle but are not affected by this repair:</p>
+    <p style="color: #666; margin-bottom: 0.75rem; font-size: 12px;">The following ADAS/safety systems are equipped on this vehicle but are not affected by this repair:</p>
     <table>
       <thead>
         <tr>
@@ -561,7 +566,7 @@
   <!-- FOOTER -->
   <div class="footer">
     <p><strong>I-CAR Reference:</strong> {{vehicle.icar_article}}</p>
-    <p style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards. The technician is responsible for verifying all procedures and confirming system functionality prior to returning the vehicle to the customer. Calibration requirements may vary based on specific vehicle trim level and equipment.</p>
+    <p style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards. The technician is responsible for verifying all procedures and confirming system functionality prior to returning the vehicle to the customer. Calibration requirements may vary based on specific vehicle trim level and equipment.</p>
     <p style="margin-top: 1rem;">Report generated: {{generated_date}} | Version: {{report_version}}</p>
   </div>
 
