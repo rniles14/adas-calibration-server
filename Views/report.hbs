@@ -30,6 +30,13 @@
       background: #ffffff;
     }
 
+    /* HYPERLINKS */
+    a {
+      color: #0066cc;
+      text-decoration: underline;
+      font-style: italic;
+    }
+
     /* HEADER */
     .header {
       background: #0a131e;
@@ -74,7 +81,7 @@
     /* VEHICLE INFO */
     .vehicle-info {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: 1.8fr 0.8fr 1fr 1fr 1.2fr;
       gap: 0.9rem;
       padding: 1rem 1.5rem;
       border-bottom: 2px solid #f1b82d;
@@ -100,7 +107,9 @@
       font-size: 13px;
       font-weight: 600;
       color: #0a131e;
-      word-break: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* ADAS SYSTEMS SECTION */
