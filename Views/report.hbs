@@ -74,7 +74,7 @@
     /* VEHICLE INFO */
     .vehicle-info {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
       gap: 0.9rem;
       padding: 1rem 1.5rem;
       border-bottom: 2px solid #f1b82d;
@@ -270,67 +270,6 @@
       line-height: 1.35;
     }
 
-    /* SEQUENCE SECTION */
-    .sequence-list {
-      margin: 0;
-    }
-
-    .sequence-item {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 0.6rem;
-      font-size: 12px;
-      page-break-inside: avoid;
-    }
-
-    .sequence-num {
-      background: #f1b82d;
-      color: #0a131e;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin: 0;
-    }
-
-    .sequence-text {
-      padding-top: 2px;
-      color: #0a131e;
-    }
-
-    /* TABLE - SYSTEMS NOT TRIGGERED */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      margin-top: 0.75rem;
-      page-break-inside: avoid;
-    }
-
-    th {
-      background: #f1b82d;
-      color: #0a131e;
-      padding: 0.55rem 0.65rem;
-      text-align: left;
-      font-weight: 600;
-      border: 1px solid #e0e0e0;
-    }
-
-    td {
-      padding: 0.55rem 0.65rem;
-      border-bottom: 1px solid #e0e0e0;
-      color: #0a131e;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
     /* FOOTER */
     .footer {
       padding: 1.25rem 1.5rem;
@@ -352,18 +291,6 @@
       color: #f1b82d;
     }
 
-    .icar-link {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background: #f1b82d;
-      color: #0a131e;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
     /* PRINT STYLES */
     @media print {
       body {
@@ -382,9 +309,6 @@
       .calibration-item {
         page-break-inside: avoid;
       }
-      .sequence-item {
-        page-break-inside: avoid;
-      }
     }
   </style>
 </head>
@@ -399,7 +323,7 @@
     </div>
     <div class="header-content">
       <h1>ADAS Calibration Report</h1>
-      <p>Professional post-repair calibration requirements and recommendations</p>
+      <p>Post-repair calibration requirements and recommendations</p>
     </div>
   </div>
 
@@ -524,53 +448,16 @@
   </div>
   {{/if}}
 
-  <!-- RECOMMENDED SEQUENCE -->
-  {{#if recommended_sequence}}
-  <div class="section">
-    <h2>Recommended Calibration Sequence</h2>
-    <div class="sequence-list">
-      {{#each recommended_sequence}}
-      <div class="sequence-item">
-        <div class="sequence-num">{{inc @index}}</div>
-        <div class="sequence-text">{{this}}</div>
-      </div>
-      {{/each}}
-    </div>
-  </div>
-  {{/if}}
-
-  <!-- SYSTEMS NOT TRIGGERED -->
-  {{#if calibrations_not_triggered}}
-  <div class="section">
-    <h2>Systems Not Triggered by This Repair</h2>
-    <p style="color: #666; margin-bottom: 0.75rem; font-size: 12px;">The following ADAS/safety systems are equipped on this vehicle but are not affected by this repair:</p>
-    <table>
-      <thead>
-        <tr>
-          <th>System Name</th>
-          <th>Reason Not Triggered</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each calibrations_not_triggered}}
-        <tr>
-          <td><strong>{{this.system}}</strong></td>
-          <td>{{this.reason}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
-  {{/if}}
-
   <!-- FOOTER -->
   <div class="footer">
     <p><strong>I-CAR Reference:</strong> {{vehicle.icar_article}}</p>
-    <p style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards. The technician is responsible for verifying all procedures and confirming system functionality prior to returning the vehicle to the customer. Calibration requirements may vary based on specific vehicle trim level and equipment.</p>
+    <p style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards.</p>
     <p style="margin-top: 1rem;">Report generated: {{generated_date}} | Version: {{report_version}}</p>
   </div>
 
 </div>
 
 </body>
-</html>
+</html> EOF
+
+
