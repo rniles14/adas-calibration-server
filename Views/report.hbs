@@ -43,8 +43,8 @@
     }
 
     .logo {
-      width: 92px;
-      height: 92px;
+      width: 130px;
+      height: 130px;
       flex-shrink: 0;
     }
 
@@ -103,7 +103,7 @@
       word-break: break-word;
     }
 
-    /* HYPERLINKS */
+    /* HYPERLINKS (kept as a fallback - inline styles on the tags themselves are primary) */
     a {
       color: #0066cc;
       text-decoration: underline;
@@ -359,7 +359,12 @@
     </div>
     <div class="info-item">
       <div class="info-label">I-CAR Reference</div>
-      <div class="info-value">{{vehicle.icar_article}}</div>
+      <div class="info-value">
+        <a href="{{vehicle.icar_url}}" target="_blank" style="color:#0066cc; text-decoration:underline; font-style:italic; font-weight:600; background-color:#fff4d6; padding:2px 6px; border-radius:3px; display:inline-block;">{{vehicle.icar_article}}</a>
+        <div style="font-size:10px; margin-top:4px; word-break:break-all; font-weight:400;">
+          <a href="{{vehicle.icar_url}}" target="_blank" style="color:#0066cc; text-decoration:underline; font-weight:400; font-style:normal;">{{vehicle.icar_url}}</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -462,7 +467,7 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    <p><strong>I-CAR Reference:</strong> {{vehicle.icar_article}}</p>
+    <p><strong>I-CAR Reference:</strong> <a href="{{vehicle.icar_url}}" target="_blank" style="color:#f1b82d; text-decoration:underline; font-weight:600;">{{vehicle.icar_article}}</a> (<a href="{{vehicle.icar_url}}" target="_blank" style="color:#f1b82d; text-decoration:underline; font-weight:400;">{{vehicle.icar_url}}</a>)</p>
     <p style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards.</p>
     <p style="margin-top: 1rem;">Report generated: {{generated_date}} | Version: {{report_version}}</p>
   </div>
