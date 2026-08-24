@@ -32,14 +32,19 @@ app.get('/health', (req, res) => {
 });
 
 // Counts calibrations by their calibration_category field.
-// calibration_category must be one of exactly: "Static", "Dynamic", "Relearn or Reset"
-// (enforced by the Money Prompt) - this is a strict exact match, not a substring/contains
-// check, so there's no ambiguity or double-counting risk.
+// calibration_category must be one of exactly these 4 values (enforced by the Money Prompt):
+//   "Static Calibration"
+//   "Dynamic Calibration"
+//   "Reset / Relearn / Initialization"
+//   "Aim / Mechanical Adjustment"
+// This is a strict exact match, not a substring/contains check, so there's no
+// ambiguity or double-counting risk.
 function countCalibrationCategories(calibrations) {
   const counts = {
-    Static: 0,
-    Dynamic: 0,
-    'Relearn or Reset': 0,
+    'Static Calibration': 0,
+    'Dynamic Calibration': 0,
+    'Reset / Relearn / Initialization': 0,
+    'Aim / Mechanical Adjustment': 0,
     uncategorized: 0
   };
 
@@ -48,7 +53,7 @@ function countCalibrationCategories(calibrations) {
     if (Object.prototype.hasOwnProperty.call(counts, category)) {
       counts[category]++;
     } else {
-      // Catches anything missing or outside the 3 allowed values so it's visible
+      // Catches anything missing or outside the 4 allowed values so it's visible
       // in logs rather than silently vanishing from the summary cards.
       counts.uncategorized++;
     }
@@ -82,7 +87,8 @@ app.post('/generate-report', (req, res) => {
     if (categoryCounts.uncategorized > 0) {
       console.warn(
         `Warning: ${categoryCounts.uncategorized} calibration(s) had a missing or ` +
-        `invalid calibration_category (expected "Static", "Dynamic", or "Relearn or Reset"). ` +
+        `invalid calibration_category (expected "Static Calibration", "Dynamic Calibration", ` +
+        `"Reset / Relearn / Initialization", or "Aim / Mechanical Adjustment"). ` +
         `These will not appear in the summary cards.`
       );
     }
@@ -99,9 +105,10 @@ app.post('/generate-report', (req, res) => {
       brake_systems: brake_systems || [],
 
       // Calculated values - exact match against calibration_category
-      static_calibrations_count: categoryCounts.Static,
-      dynamic_calibrations_count: categoryCounts.Dynamic,
-      relearn_reset_calibrations_count: categoryCounts['Relearn or Reset'],
+      static_calibrations_count: categoryCounts['Static Calibration'],
+      dynamic_calibrations_count: categoryCounts['Dynamic Calibration'],
+      relearn_reset_calibrations_count: categoryCounts['Reset / Relearn / Initialization'],
+      aim_mechanical_calibrations_count: categoryCounts['Aim / Mechanical Adjustment'],
 
       // Report metadata
       generated_date: new Date().toLocaleDateString(),
