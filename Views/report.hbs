@@ -199,7 +199,7 @@
 
     .summary-cards {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 0.75rem;
       margin-bottom: 0;
       page-break-inside: avoid;
@@ -208,7 +208,7 @@
     .card {
       background: #f1b82d;
       color: #0a131e;
-      padding: 0.85rem;
+      padding: 0.65rem 0.4rem;
       border-radius: 6px;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -216,17 +216,18 @@
     }
 
     .card-value {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
       margin: 0 0 0.15rem 0;
     }
 
     .card-label {
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 700;
       margin: 0;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
+      line-height: 1.25;
     }
 
     /* CALIBRATIONS SECTION */
@@ -425,7 +426,11 @@
       </div>
       <div class="card">
         <div class="card-value">{{relearn_reset_calibrations_count}}</div>
-        <div class="card-label">Relearn / Reset</div>
+        <div class="card-label">Reset / Relearn</div>
+      </div>
+      <div class="card">
+        <div class="card-value">{{aim_mechanical_calibrations_count}}</div>
+        <div class="card-label">Aim / Mechanical</div>
       </div>
     </div>
   </div>
