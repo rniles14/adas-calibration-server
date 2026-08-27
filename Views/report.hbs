@@ -361,10 +361,14 @@
     <div class="info-item">
       <div class="info-label">I-CAR Reference</div>
       <div class="info-value">
+        {{#if vehicle.icar_article}}
         <a href="{{vehicle.icar_url}}" target="_blank" style="color:#0066cc; text-decoration:underline; font-style:italic; font-weight:600; background-color:#fff4d6; padding:2px 6px; border-radius:3px; display:inline-block;">{{vehicle.icar_article}}</a>
         <div style="font-size:10px; margin-top:4px; word-break:break-all; font-weight:400;">
           <a href="{{vehicle.icar_url}}" target="_blank" style="color:#0066cc; text-decoration:underline; font-weight:400; font-style:normal;">{{vehicle.icar_url}}</a>
         </div>
+        {{else}}
+        <span style="font-size:12px; color:#666; font-style:italic;">No I-CAR article available — see ALLDATA reference below</span>
+        {{/if}}
       </div>
     </div>
   </div>
@@ -407,6 +411,9 @@
     {{/if}}
   </div>
   {{/if}}
+
+  <!-- ALLDATA ADAS COMPONENT REFERENCE -->
+  {{{alldataComponentsTableHtml}}}
 
   <!-- SUMMARY CARDS -->
   <div class="section">
@@ -458,6 +465,12 @@
           <span class="detail-value">{{this.icar_requirement}}</span>
         </div>
         {{/if}}
+        {{#if this.alldata_component.componentName}}
+        <div class="detail-row">
+          <span class="detail-label">ALLDATA Component:</span>
+          <span class="detail-value">{{this.alldata_component.componentName}} ({{this.alldata_component.location}})</span>
+        </div>
+        {{/if}}
         {{#if this.notes}}
         <div class="detail-row">
           <span class="detail-label">Notes:</span>
@@ -472,8 +485,10 @@
 
   <!-- FOOTER -->
   <div class="footer">
+    {{#if vehicle.icar_article}}
     <p><strong>I-CAR Reference:</strong> <a href="{{vehicle.icar_url}}" target="_blank" style="color:#f1b82d; text-decoration:underline; font-weight:600;">{{vehicle.icar_article}}</a> (<a href="{{vehicle.icar_url}}" target="_blank" style="color:#f1b82d; text-decoration:underline; font-weight:400;">{{vehicle.icar_url}}</a>)</p>
-    <p style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, and I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards.</p>
+    {{/if}}
+    <p style="margin-top: 0.85rem; padding-top: 0.85rem; border-top: 1px solid #f1b82d;">This calibration report is generated based on repair estimate analysis, NHTSA vehicle equipment data, ALLDATA OEM component data, and (when available) I-CAR calibration reference material. All calibration procedures must be performed in accordance with OEM service information and current industry standards.</p>
     <p style="margin-top: 1rem;">Report generated: {{generated_date}} | Version: {{report_version}}</p>
   </div>
 
