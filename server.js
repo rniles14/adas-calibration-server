@@ -198,16 +198,19 @@ app.post('/generate-pitch-report', (req, res) => {
       };
     });
 
-    // Standing line items always included
-    const standingItems = [
-      { service_name: 'Pre-Repair Diagnostic Scan',  price: PRICE_TABLE['S018'][carrierKey] },
+    // Standing line items — pre first, post last
+    const preItems = [
+      { service_name: 'Pre-Repair Diagnostic Scan', price: PRICE_TABLE['S018'][carrierKey] },
+    ];
+    const postItems = [
       { service_name: 'Post-Repair Diagnostic Scan', price: PRICE_TABLE['S019'][carrierKey] },
     ];
 
     // Total
     const calibrationTotal = enrichedCalibrations.reduce((sum, c) => sum + (c.price || 0), 0);
-    const standingTotal = standingItems.reduce((sum, s) => sum + (s.price || 0), 0);
-    const grandTotal = calibrationTotal + standingTotal;
+    const preTotal = preItems.reduce((sum, s) => sum + (s.price || 0), 0);
+    const postTotal = postItems.reduce((sum, s) => sum + (s.price || 0), 0);
+    const grandTotal = calibrationTotal + preTotal + postTotal;
 
     // Carrier display label
     const carrierLabels = {
@@ -237,9 +240,9 @@ app.post('/generate-pitch-report', (req, res) => {
       // Pricing
       carrier_label: carrierLabels[carrierKey],
       enriched_calibrations: enrichedCalibrations,
-      standing_items: standingItems,
+      pre_items: preItems,
+      post_items: postItems,
       calibration_total: calibrationTotal,
-      standing_total: standingTotal,
       grand_total: grandTotal,
 
       // Summary counts

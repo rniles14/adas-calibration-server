@@ -583,7 +583,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each standing_items}}
+      {{#each pre_items}}
       <tr class="standing-row">
         <td>{{this.service_name}}</td>
         <td>Diagnostic</td>
@@ -597,6 +597,13 @@
         <td class="right">
           {{#if this.price}}{{currency this.price}}{{else}}—{{/if}}
         </td>
+      </tr>
+      {{/each}}
+      {{#each post_items}}
+      <tr class="standing-row">
+        <td>{{this.service_name}}</td>
+        <td>Diagnostic</td>
+        <td class="right">{{currency this.price}}</td>
       </tr>
       {{/each}}
       <tr class="total-row">
