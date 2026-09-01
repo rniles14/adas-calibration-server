@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADAS Pre-Work Report — {{vehicle.make}} {{vehicle.model}} {{vehicle.year}}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page { size: A4; margin: 0.45in; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      color: #0a131e;
+      background: #ffffff;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    /* ── HEADER BANNER ── */
+    .banner {
+      background: #0a131e;
+      color: #fff;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .banner-logo {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+
+    .banner-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .banner-text { flex: 1; }
+
+    .banner-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f1b82d;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.2rem;
+    }
+
+    .banner-subtitle {
+      font-size: 10px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .banner-action {
+      background: #f1b82d;
+      color: #0a131e;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+
+    .banner-action .action-count {
+      font-size: 20px;
+      display: block;
+    }
+
+    /* ── INFO GRID ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 3px solid #f1b82d;
+    }
+
+    .info-col {
+      padding: 0.75rem 1.25rem;
+    }
+
+    .info-col:first-child {
+      border-right: 1px solid #e5e5e5;
+      background: #f9f9f9;
+    }
+
+    .info-col:last-child {
+      background: #fff;
+    }
+
+    .info-col-title {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .info-label {
+      font-size: 10px;
+      color: #888;
+      min-width: 90px;
+      flex-shrink: 0;
+    }
+
+    .info-value {
+      font-size: 11px;
+      font-weight: 600;
+      color: #0a131e;
+    }
+
+    /* ── SECTION HEADINGS ── */
+    .section {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0a131e;
+      border-bottom: 2px solid #f1b82d;
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    /* ── CALIBRATION TABLE ── */
+    .cal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .cal-table thead tr {
+      background: #0a131e;
+      color: #fff;
+    }
+
+    .cal-table thead th {
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cal-table thead th.right { text-align: right; }
+
+    .cal-table tbody tr {
+      border-bottom: 1px solid #efefef;
+    }
+
+    .cal-table tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .cal-table tbody td {
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    .cal-table tbody td.right {
+      text-align: right;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .system-name {
+      font-weight: 600;
+      color: #0a131e;
+      margin-bottom: 2px;
+    }
+
+    .system-detail {
+      font-size: 10px;
+      color: #666;
+      line-height: 1.35;
+    }
+
+    .cal-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-static   { background: #e8f4e8; color: #2d7a2d; }
+    .badge-dynamic  { background: #e8eef8; color: #2d4a8a; }
+    .badge-relearn  { background: #f8f0e8; color: #8a5a2d; }
+    .badge-aim      { background: #f0e8f8; color: #5a2d8a; }
+
+    .trigger-text {
+      font-size: 10px;
+      color: #555;
+    }
+
+    .alldata-cite {
+      font-size: 9px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* ── NOT TRIGGERED TABLE ── */
+    .not-triggered-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+
+    .not-triggered-table thead tr {
+      background: #e5e5e5;
+      color: #555;
+    }
+
+    .not-triggered-table thead th {
+      padding: 5px 8px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .not-triggered-table tbody td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #555;
+      vertical-align: top;
+    }
+
+    /* ── BILLING SUMMARY ── */
+    .billing-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .billing-table thead tr {
+      background: #0a131e;
+      color: #fff;
+    }
+
+    .billing-table thead th {
+      padding: 6px 10px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .billing-table thead th.right { text-align: right; }
+
+    .billing-table tbody tr {
+      border-bottom: 1px solid #efefef;
+    }
+
+    .billing-table tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .billing-table tbody td {
+      padding: 6px 10px;
+      vertical-align: middle;
+    }
+
+    .billing-table tbody td.right {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .billing-table .standing-row td {
+      color: #555;
+      font-style: italic;
+    }
+
+    .billing-table .total-row {
+      background: #0a131e !important;
+      border-top: 2px solid #f1b82d;
+    }
+
+    .billing-table .total-row td {
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+
+    .billing-table .total-row td.right {
+      color: #f1b82d;
+      font-size: 15px;
+    }
+
+    .rate-note {
+      font-size: 9px;
+      color: #888;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0;
+    }
+
+    .card {
+      background: #f1b82d;
+      color: #0a131e;
+      padding: 0.5rem 0.3rem;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .card-value {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .card-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #0a131e;
+      color: rgba(255,255,255,0.75);
+      padding: 0.75rem 1.25rem;
+      font-size: 9px;
+      line-height: 1.5;
+      margin-top: 1rem;
+    }
+
+    .footer strong { color: #f1b82d; }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    @media print {
+      body { margin: 0; padding: 0; }
+      .section { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER BANNER -->
+<div class="banner">
+  <div class="banner-logo">
+    <img src="https://res.cloudinary.com/dk64e0k8t/image/upload/v1775582262/Adas_logo_2_transparent.png_1_fcjm2x.png" alt="Central Missouri ADAS">
+  </div>
+  <div class="banner-text">
+    <div class="banner-title">ADAS Pre-Work Identification Report</div>
+    <div class="banner-subtitle">Automated ADAS Identification &amp; Calibration Research — Central Missouri ADAS</div>
+  </div>
+  <div class="banner-action">
+    <span class="action-count">{{total_calibrations}}</span>
+    CALIBRATION{{#gt total_calibrations 1}}S{{/gt}} IDENTIFIED
+  </div>
+</div>
+
+<!-- VEHICLE & CLAIM INFO -->
+<div class="info-grid">
+  <div class="info-col">
+    <div class="info-col-title">Vehicle &amp; Estimate</div>
+    <div class="info-row">
+      <span class="info-label">VIN</span>
+      <span class="info-value">{{vehicle.vin}}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Vehicle</span>
+      <span class="info-value">{{vehicle.year}} {{vehicle.make}} {{vehicle.model}}</span>
+    </div>
+    {{#if mileage}}
+    <div class="info-row">
+      <span class="info-label">Mileage</span>
+      <span class="info-value">{{mileage}}</span>
+    </div>
+    {{/if}}
+    {{#if impact_area}}
+    <div class="info-row">
+      <span class="info-label">Primary Impact</span>
+      <span class="info-value">{{impact_area}}</span>
+    </div>
+    {{/if}}
+    {{#if estimating_system}}
+    <div class="info-row">
+      <span class="info-label">Estimate Source</span>
+      <span class="info-value">{{estimating_system}}</span>
+    </div>
+    {{/if}}
+    {{#if estimate_date}}
+    <div class="info-row">
+      <span class="info-label">Estimate Date</span>
+      <span class="info-value">{{estimate_date}}</span>
+    </div>
+    {{/if}}
+  </div>
+  <div class="info-col">
+    <div class="info-col-title">Shop &amp; Carrier</div>
+    {{#if repair_facility}}
+    <div class="info-row">
+      <span class="info-label">Repair Facility</span>
+      <span class="info-value">{{repair_facility}}</span>
+    </div>
+    {{/if}}
+    {{#if estimator_name}}
+    <div class="info-row">
+      <span class="info-label">Estimator</span>
+      <span class="info-value">{{estimator_name}}</span>
+    </div>
+    {{/if}}
+    {{#if insurance_company}}
+    <div class="info-row">
+      <span class="info-label">Insurance Carrier</span>
+      <span class="info-value">{{insurance_company}}</span>
+    </div>
+    {{/if}}
+    {{#if claim_number}}
+    <div class="info-row">
+      <span class="info-label">Claim #</span>
+      <span class="info-value">{{claim_number}}</span>
+    </div>
+    {{/if}}
+    <div class="info-row">
+      <span class="info-label">Rate Schedule</span>
+      <span class="info-value">{{carrier_label}}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Report ID</span>
+      <span class="info-value">{{report_id}}</span>
+    </div>
+  </div>
+</div>
+
+<!-- CALIBRATION SUMMARY CARDS -->
+<div class="section">
+  <div class="section-title">Calibration Summary</div>
+  <div class="summary-cards">
+    <div class="card">
+      <div class="card-value">{{total_calibrations}}</div>
+      <div class="card-label">Total Identified</div>
+    </div>
+    <div class="card">
+      <div class="card-value">{{static_calibrations_count}}</div>
+      <div class="card-label">Static Calibrations</div>
+    </div>
+    <div class="card">
+      <div class="card-value">{{dynamic_calibrations_count}}</div>
+      <div class="card-label">Dynamic Calibrations</div>
+    </div>
+    <div class="card">
+      <div class="card-value">{{relearn_reset_calibrations_count}}</div>
+      <div class="card-label">Reset / Relearn</div>
+    </div>
+    <div class="card">
+      <div class="card-value">{{aim_mechanical_calibrations_count}}</div>
+      <div class="card-label">Aim / Mechanical</div>
+    </div>
+  </div>
+</div>
+
+<!-- REQUIRED CALIBRATIONS TABLE -->
+{{#if enriched_calibrations}}
+<div class="section">
+  <div class="section-title">Required ADAS Calibrations &amp; OEM Procedures</div>
+  <table class="cal-table">
+    <thead>
+      <tr>
+        <th style="width:5%">#</th>
+        <th style="width:28%">ADAS System / Sensor</th>
+        <th style="width:12%">Type</th>
+        <th style="width:35%">Estimate Trigger &amp; OEM Mandate</th>
+        <th style="width:20%" class="right">Rec. Line Item</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each enriched_calibrations}}
+      <tr>
+        <td style="color:#888;font-weight:700;">{{inc @index}}</td>
+        <td>
+          <div class="system-name">{{this.service_name}}</div>
+          {{#if this.alldata_component.location}}
+          <div class="system-detail">{{this.alldata_component.componentName}} — {{this.alldata_component.location}}</div>
+          {{/if}}
+        </td>
+        <td>
+          {{#eq this.calibration_category "Static Calibration"}}
+          <span class="cal-badge badge-static">Static</span>
+          {{/eq}}
+          {{#eq this.calibration_category "Dynamic Calibration"}}
+          <span class="cal-badge badge-dynamic">Dynamic</span>
+          {{/eq}}
+          {{#eq this.calibration_category "Reset / Relearn / Initialization"}}
+          <span class="cal-badge badge-relearn">Relearn</span>
+          {{/eq}}
+          {{#eq this.calibration_category "Aim / Mechanical Adjustment"}}
+          <span class="cal-badge badge-aim">Aim</span>
+          {{/eq}}
+        </td>
+        <td>
+          <div class="trigger-text"><strong>Trigger:</strong> {{this.trigger}}</div>
+          {{#if this.icar_requirement}}
+          <div class="trigger-text" style="margin-top:3px;"><strong>OEM:</strong> {{this.icar_requirement}}</div>
+          {{/if}}
+          {{#if this.alldata_notes.length}}
+          {{#each this.alldata_notes}}
+          <div class="alldata-cite">Note: {{this}}</div>
+          {{/each}}
+          {{/if}}
+        </td>
+        <td class="right">
+          {{#if this.price}}
+          {{currency this.price}}
+          {{else}}
+          —
+          {{/if}}
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+{{/if}}
+
+<!-- NOT TRIGGERED -->
+{{#if calibrations_not_triggered.length}}
+<div class="section">
+  <div class="section-title">Systems Not Triggered by This Estimate</div>
+  <table class="not-triggered-table">
+    <thead>
+      <tr>
+        <th style="width:30%">System</th>
+        <th style="width:25%">Component</th>
+        <th>Reason Not Required</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each calibrations_not_triggered}}
+      <tr>
+        <td>{{this.system}}</td>
+        <td>{{this.component}}</td>
+        <td>{{this.reason}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+{{/if}}
+
+<!-- BILLING SUMMARY -->
+<div class="section">
+  <div class="section-title">Insurance-Ready Billing Summary</div>
+  <table class="billing-table">
+    <thead>
+      <tr>
+        <th style="width:55%">Line Item Description</th>
+        <th style="width:20%">Category</th>
+        <th style="width:25%" class="right">Recommended Fee</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each standing_items}}
+      <tr class="standing-row">
+        <td>{{this.service_name}}</td>
+        <td>Diagnostic</td>
+        <td class="right">{{currency this.price}}</td>
+      </tr>
+      {{/each}}
+      {{#each enriched_calibrations}}
+      <tr>
+        <td>{{this.service_name}}</td>
+        <td>{{this.calibration_category}}</td>
+        <td class="right">
+          {{#if this.price}}{{currency this.price}}{{else}}—{{/if}}
+        </td>
+      </tr>
+      {{/each}}
+      <tr class="total-row">
+        <td colspan="2">Total Recommended ADAS Reimbursement</td>
+        <td class="right">{{currency grand_total}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="rate-note">Rates shown are {{carrier_label}} schedule. All fees are subject to OEM procedure requirements and shop verification of installed equipment.</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-grid">
+    <div>
+      <strong>Central Missouri ADAS</strong><br>
+      12500 County Road 3100 · Rolla, MO<br>
+      Dedicated ADAS Calibration — Serving Body Shops, Dealers &amp; Carriers
+    </div>
+    <div>
+      <strong>Data Sources</strong><br>
+      ALLDATA ADAS Quick Reference (VIN-specific) · NHTSA vPIC · I-CAR RTS<br>
+      {{#if vehicle.alldata_source_url}}
+      ALLDATA Article: <span style="color:#f1b82d;">{{vehicle.alldata_source_url}}</span>
+      {{/if}}
+    </div>
+  </div>
+  <div style="border-top:1px solid rgba(241,184,45,0.3);padding-top:0.4rem;margin-top:0.3rem;">
+    This report identifies ADAS calibrations required based on the submitted repair estimate, VIN-specific ALLDATA component data, and I-CAR calibration references. All calibrations must be performed per OEM service information. Equipment confirmation via pre-scan is recommended prior to billing. Report ID: {{report_id}} · Generated: {{generated_date}}
+  </div>
+</div>
+
+</body>
+</html>
