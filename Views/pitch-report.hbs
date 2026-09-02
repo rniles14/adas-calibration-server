@@ -571,57 +571,34 @@
 </div>
 {{/if}}
 
-<!-- BILLING SUMMARY -->
+<!-- BILLING TOTAL -->
 <div class="section">
-  <div class="section-title">Insurance-Ready Billing Summary</div>
+  <div class="section-title">Recommended ADAS Reimbursement</div>
   <table class="billing-table">
-    <thead>
-      <tr>
-        <th style="width:55%">Line Item Description</th>
-        <th style="width:20%">Category</th>
-        <th style="width:25%" class="right">Recommended Fee</th>
-      </tr>
-    </thead>
     <tbody>
       {{#each pre_items}}
       <tr class="standing-row">
         <td>{{this.service_name}}</td>
-        <td>Diagnostic</td>
         <td class="right">{{currency this.price}}</td>
       </tr>
       {{/each}}
-      {{#each enriched_calibrations}}
       <tr>
-        <td>
-          {{this.service_name}}
-          {{#if this.alldata_component.componentName}}
-          <span style="font-size:10px;color:#888;display:block;">{{this.alldata_component.componentName}}{{#if this.alldata_component.location}} — {{this.alldata_component.location}}{{/if}}</span>
-          {{/if}}
-        </td>
-        <td>{{this.calibration_category}}</td>
-        <td class="right">
-          {{#if this.consolidated}}
-          <span style="font-size:10px;color:#888;font-style:italic;">Included above</span>
-          {{else if this.price}}
-          {{currency this.price}}
-          {{else}}—{{/if}}
-        </td>
+        <td><strong>{{total_calibrations}} ADAS Calibrations</strong></td>
+        <td class="right"><strong>{{currency calibration_total}}</strong></td>
       </tr>
-      {{/each}}
       {{#each post_items}}
       <tr class="standing-row">
         <td>{{this.service_name}}</td>
-        <td>Diagnostic</td>
         <td class="right">{{currency this.price}}</td>
       </tr>
       {{/each}}
       <tr class="total-row">
-        <td colspan="2">Total Recommended ADAS Reimbursement</td>
+        <td>Total Recommended ADAS Reimbursement</td>
         <td class="right">{{currency grand_total}}</td>
       </tr>
     </tbody>
   </table>
-  <div class="rate-note">Rates shown are {{carrier_label}} schedule. All fees are subject to OEM procedure requirements and shop verification of installed equipment.</div>
+  <div class="rate-note">All fees are subject to OEM procedure requirements and shop verification of installed equipment.</div>
 </div>
 
 <!-- FOOTER -->
