@@ -220,6 +220,25 @@ app.post('/generate-pitch-report', (req, res) => {
     // Recalculate total after consolidation
     const calibrationTotal = enrichedCalibrations.reduce((sum, c) => sum + (c.price || 0), 0);
 
+    // Consolidate billing: same service_id = one billable procedure.
+    // The calibration table still shows every triggered component,
+    // but only the first entry per service_id carries the price.
+    // The rest show "Included" so the shop sees coverage without double-billing.
+    const seenServiceIds = new Set();
+    enrichedCalibrations.forEach(cal => {
+      if (seenServiceIds.has(cal.service_id)) {
+        cal.consolidated = true;
+        cal.original_price = cal.price;
+        cal.price = null;
+      } else {
+        seenServiceIds.add(cal.service_id);
+        cal.consolidated = false;
+      }
+    });
+
+    // Recalculate total after consolidation
+    const calibrationTotal = enrichedCalibrations.reduce((sum, c) => sum + (c.price || 0), 0);
+
     // Standing line items — pre first, post last
     const preItems = [
       { service_name: 'Pre-Repair Diagnostic Scan', price: PRICE_TABLE['S018'][carrierKey] },
