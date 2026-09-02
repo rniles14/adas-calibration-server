@@ -600,7 +600,11 @@
         </td>
         <td>{{this.calibration_category}}</td>
         <td class="right">
-          {{#if this.price}}{{currency this.price}}{{else}}—{{/if}}
+          {{#if this.consolidated}}
+          <span style="font-size:10px;color:#888;font-style:italic;">Included above</span>
+          {{else if this.price}}
+          {{currency this.price}}
+          {{else}}—{{/if}}
         </td>
       </tr>
       {{/each}}
