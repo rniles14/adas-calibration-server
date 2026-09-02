@@ -170,9 +170,12 @@ app.post('/generate-pitch-report', (req, res) => {
     // Parse the Money Module JSON string
     let calibrationData;
     try {
-      calibrationData = typeof req.body.calibrationData === 'string'
-        ? JSON.parse(req.body.calibrationData)
-        : req.body.calibrationData;
+      let raw = typeof req.body.calibrationData === 'string'
+        ? req.body.calibrationData
+        : JSON.stringify(req.body.calibrationData);
+      // Strip markdown fences if present
+      raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+      calibrationData = JSON.parse(raw);
     } catch (e) {
       return res.status(400).json({ error: 'calibrationData is not valid JSON', details: e.message });
     }
