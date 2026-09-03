@@ -615,12 +615,12 @@
     </div>
     <div>
       <strong>Data Sources</strong><br>
-      ALLDATA ADAS Quick Reference (VIN-specific) · NHTSA vPIC · I-CAR RTS<br>
+      ALLDATA ADAS Quick Reference (VIN-specific) · I-CAR RTS<br>
       {{#if vehicle.alldata_source_url}}
-      ALLDATA: <span style="color:#f1b82d;">{{vehicle.alldata_source_url}}</span><br>
+      ALLDATA: <a href="{{vehicle.alldata_source_url}}" style="color:#f1b82d;">View in ALLDATA</a><br>
       {{/if}}
       {{#if vehicle.icar_url}}
-      I-CAR: <span style="color:#f1b82d;">{{vehicle.icar_url}}</span>
+      I-CAR: <a href="{{vehicle.icar_url}}" style="color:#f1b82d;">View I-CAR Article</a>
       {{/if}}
     </div>
   </div>
