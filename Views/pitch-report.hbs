@@ -502,6 +502,7 @@
     </thead>
     <tbody>
       {{#each enriched_calibrations}}
+      {{#unless this.consolidated}}
       <tr>
         <td style="color:#888;font-weight:700;">{{inc @index}}</td>
         <td>
@@ -540,9 +541,26 @@
           {{/if}}
         </td>
       </tr>
+      {{/unless}}
       {{/each}}
+      <tr style="border-top:1px solid #ccc;">
+        <td colspan="3"></td>
+        <td style="padding:7px 8px;font-size:11px;font-style:italic;color:#666;">Pre-Repair Diagnostic Scan</td>
+        <td class="right" style="font-size:11px;font-style:italic;color:#666;">{{currency pre_scan_price}}</td>
+      </tr>
+      <tr>
+        <td colspan="3"></td>
+        <td style="padding:7px 8px;font-size:11px;font-style:italic;color:#666;">Post-Repair Diagnostic Scan</td>
+        <td class="right" style="font-size:11px;font-style:italic;color:#666;">{{currency post_scan_price}}</td>
+      </tr>
+      <tr style="background:#0a131e;">
+        <td colspan="3"></td>
+        <td style="padding:8px;color:#fff;font-weight:700;font-size:13px;">Total Recommended ADAS Reimbursement</td>
+        <td class="right" style="color:#f1b82d;font-weight:700;font-size:15px;">{{currency grand_total}}</td>
+      </tr>
     </tbody>
   </table>
+  <div class="rate-note" style="margin-top:6px;">All fees are subject to OEM procedure requirements and shop verification of installed equipment.</div>
 </div>
 {{/if}}
 
@@ -571,35 +589,7 @@
 </div>
 {{/if}}
 
-<!-- BILLING TOTAL -->
-<div class="section">
-  <div class="section-title">Recommended ADAS Reimbursement</div>
-  <table class="billing-table">
-    <tbody>
-      {{#each pre_items}}
-      <tr class="standing-row">
-        <td>{{this.service_name}}</td>
-        <td class="right">{{currency this.price}}</td>
-      </tr>
-      {{/each}}
-      <tr>
-        <td><strong>{{total_calibrations}} ADAS Calibrations</strong></td>
-        <td class="right"><strong>{{currency calibration_total}}</strong></td>
-      </tr>
-      {{#each post_items}}
-      <tr class="standing-row">
-        <td>{{this.service_name}}</td>
-        <td class="right">{{currency this.price}}</td>
-      </tr>
-      {{/each}}
-      <tr class="total-row">
-        <td>Total Recommended ADAS Reimbursement</td>
-        <td class="right">{{currency grand_total}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="rate-note">All fees are subject to OEM procedure requirements and shop verification of installed equipment.</div>
-</div>
+
 
 <!-- FOOTER -->
 <div class="footer">
@@ -613,7 +603,10 @@
       <strong>Data Sources</strong><br>
       ALLDATA ADAS Quick Reference (VIN-specific) · NHTSA vPIC · I-CAR RTS<br>
       {{#if vehicle.alldata_source_url}}
-      ALLDATA Article: <span style="color:#f1b82d;">{{vehicle.alldata_source_url}}</span>
+      ALLDATA: <span style="color:#f1b82d;">{{vehicle.alldata_source_url}}</span><br>
+      {{/if}}
+      {{#if vehicle.icar_url}}
+      I-CAR: <span style="color:#f1b82d;">{{vehicle.icar_url}}</span>
       {{/if}}
     </div>
   </div>

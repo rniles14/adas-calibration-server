@@ -264,6 +264,8 @@ app.post('/generate-pitch-report', (req, res) => {
       enriched_calibrations: enrichedCalibrations,
       pre_items: preItems,
       post_items: postItems,
+      pre_scan_price: preItems[0] ? preItems[0].price : 0,
+      post_scan_price: postItems[0] ? postItems[0].price : 0,
       calibration_total: calibrationTotal,
       grand_total: grandTotal,
 
