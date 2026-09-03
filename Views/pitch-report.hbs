@@ -501,6 +501,18 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:2px solid #f1b82d;">
+        <td style="color:#888;font-weight:700;padding:7px 8px;"></td>
+        <td style="padding:7px 8px;">
+          <div class="system-name">Pre-Repair Diagnostic Scan</div>
+          <div class="system-detail">Identify existing DTCs and confirm installed ADAS modules</div>
+        </td>
+        <td><span class="cal-badge badge-relearn">SCAN</span></td>
+        <td style="padding:7px 8px;">
+          <div class="trigger-text">Required before repairs begin per OEM procedure</div>
+        </td>
+        <td class="right">{{currency pre_scan_price}}</td>
+      </tr>
       {{#each enriched_calibrations}}
       {{#unless this.consolidated}}
       <tr>
@@ -543,15 +555,17 @@
       </tr>
       {{/unless}}
       {{/each}}
-      <tr style="border-top:1px solid #ccc;">
-        <td colspan="3"></td>
-        <td style="padding:7px 8px;font-size:11px;font-style:italic;color:#666;">Pre-Repair Diagnostic Scan</td>
-        <td class="right" style="font-size:11px;font-style:italic;color:#666;">{{currency pre_scan_price}}</td>
-      </tr>
-      <tr>
-        <td colspan="3"></td>
-        <td style="padding:7px 8px;font-size:11px;font-style:italic;color:#666;">Post-Repair Diagnostic Scan</td>
-        <td class="right" style="font-size:11px;font-style:italic;color:#666;">{{currency post_scan_price}}</td>
+      <tr style="border-top:2px solid #f1b82d;">
+        <td style="color:#888;font-weight:700;padding:7px 8px;"></td>
+        <td style="padding:7px 8px;">
+          <div class="system-name">Post-Repair Diagnostic Scan</div>
+          <div class="system-detail">Verify all DTCs cleared and calibrations confirmed</div>
+        </td>
+        <td><span class="cal-badge badge-relearn">SCAN</span></td>
+        <td style="padding:7px 8px;">
+          <div class="trigger-text">Required after all calibrations are complete per OEM procedure</div>
+        </td>
+        <td class="right">{{currency post_scan_price}}</td>
       </tr>
       <tr style="background:#0a131e;">
         <td colspan="3"></td>
