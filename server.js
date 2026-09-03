@@ -271,6 +271,7 @@ app.post('/generate-pitch-report', (req, res) => {
 
       // Summary counts
       total_calibrations: calibrations_required.length,
+      total_line_items: calibrations_required.length + 2,
       static_calibrations_count: categoryCounts['Static Calibration'],
       dynamic_calibrations_count: categoryCounts['Dynamic Calibration'],
       relearn_reset_calibrations_count: categoryCounts['Reset / Relearn / Initialization'],

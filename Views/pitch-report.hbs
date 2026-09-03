@@ -502,7 +502,7 @@
     </thead>
     <tbody>
       <tr style="border-bottom:2px solid #f1b82d;">
-        <td style="color:#888;font-weight:700;padding:7px 8px;"></td>
+        <td style="color:#888;font-weight:700;padding:7px 8px;">1</td>
         <td style="padding:7px 8px;">
           <div class="system-name">Pre-Repair Diagnostic Scan</div>
           <div class="system-detail">Identify existing DTCs and confirm installed ADAS modules</div>
@@ -516,7 +516,7 @@
       {{#each enriched_calibrations}}
       {{#unless this.consolidated}}
       <tr>
-        <td style="color:#888;font-weight:700;">{{inc @index}}</td>
+        <td style="color:#888;font-weight:700;">{{inc (inc @index)}}</td>
         <td>
           <div class="system-name">{{this.service_name}}</div>
           {{#if this.alldata_component.location}}
@@ -556,7 +556,7 @@
       {{/unless}}
       {{/each}}
       <tr style="border-top:2px solid #f1b82d;">
-        <td style="color:#888;font-weight:700;padding:7px 8px;"></td>
+        <td style="color:#888;font-weight:700;padding:7px 8px;">{{inc (inc total_calibrations)}}</td>
         <td style="padding:7px 8px;">
           <div class="system-name">Post-Repair Diagnostic Scan</div>
           <div class="system-detail">Verify all DTCs cleared and calibrations confirmed</div>
