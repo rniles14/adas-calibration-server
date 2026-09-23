@@ -104,6 +104,28 @@ function countCalibrationCategories(calibrations) {
 }
 
 // ─────────────────────────────────────────────
+// NOT-TRIGGERED GROUPING (shared)
+// Collapse not-triggered rows: one row per component, systems listed together
+// ─────────────────────────────────────────────
+function groupNotTriggered(rows) {
+  const map = new Map();
+  (rows || []).forEach(nt => {
+    const compKey = nt.component || nt.system || 'Unknown';
+    if (!map.has(compKey)) {
+      map.set(compKey, { component: compKey, systems: [], reason: nt.reason });
+    }
+    const entry = map.get(compKey);
+    if (nt.system && !entry.systems.includes(nt.system)) entry.systems.push(nt.system);
+  });
+  return Array.from(map.values()).map(e => ({
+    component: e.component,
+    system: e.systems.join(', '),
+    systems: e.systems,
+    reason: e.reason
+  }));
+}
+
+// ─────────────────────────────────────────────
 // POST /generate-report  — existing insurance report (unchanged)
 // ─────────────────────────────────────────────
 app.post('/generate-report', (req, res) => {
@@ -135,7 +157,7 @@ app.post('/generate-report', (req, res) => {
       vehicle,
       repair_items_count: repair_items_count || 0,
       calibrations_required: calibrations_required || [],
-      calibrations_not_triggered: notTriggeredGrouped,
+      calibrations_not_triggered: groupNotTriggered(calibrations_not_triggered),
       recommended_sequence: recommended_sequence || [],
       adas_systems_present: adas_systems_present || [],
       safety_systems_present: safety_systems_present || [],
@@ -185,7 +207,17 @@ app.post('/generate-pitch-report', (req, res) => {
     const claim = req.body.claim || {};
     const vehicleInfo = req.body.vehicle_info || {};
 
-    const { vehicle, calibrations_required, calibrations_not_triggered } = calibrationData;
+    const {
+      vehicle,
+      calibrations_required,
+      calibrations_not_triggered,
+      verify_on_prescan,
+      diagnostic_scans_required
+    } = calibrationData;
+
+    // Pre/post scans are required on collision repairs whether or not any
+    // calibration is triggered. Only an explicit false turns them off.
+    const scansRequired = diagnostic_scans_required !== false;
 
     if (!vehicle || !Array.isArray(calibrations_required)) {
       return res.status(400).json({ error: 'calibrationData missing vehicle or calibrations_required' });
@@ -234,12 +266,28 @@ app.post('/generate-pitch-report', (req, res) => {
     const calibrationTotal = billableCalibrations.reduce((sum, c) => sum + (c.price || 0), 0);
 
     // Standing line items — pre first, post last
-    const preItems = [
-      { service_name: 'Pre-Repair Diagnostic Scan', price: PRICE_TABLE['S018'][carrierKey] },
-    ];
-    const postItems = [
-      { service_name: 'Post-Repair Diagnostic Scan', price: PRICE_TABLE['S019'][carrierKey] },
-    ];
+    const preItems = scansRequired
+      ? [{ service_name: 'Pre-Repair Diagnostic Scan', price: PRICE_TABLE['S018'][carrierKey] }]
+      : [];
+    const postItems = scansRequired
+      ? [{ service_name: 'Post-Repair Diagnostic Scan', price: PRICE_TABLE['S019'][carrierKey] }]
+      : [];
+
+    // Row numbers: pre-scan is row 1 when present, calibrations follow, post-scan last
+    const firstCalRow = scansRequired ? 2 : 1;
+    billableCalibrations.forEach((c, i) => { c.row_number = firstCalRow + i; });
+    const postScanRowNumber = firstCalRow + billableCalibrations.length;
+
+    // Verify-on-pre-scan: triggered but equipment unconfirmed. Shown with the
+    // price it WOULD carry, never added to any total.
+    const verifyRows = (Array.isArray(verify_on_prescan) ? verify_on_prescan : []).map(v => {
+      const row = PRICE_TABLE[v.service_id_if_confirmed] || null;
+      return {
+        ...v,
+        service_name_if_confirmed: row ? row.name : null,
+        price_if_confirmed: row ? row[carrierKey] : null
+      };
+    });
 
 
     const preTotal = preItems.reduce((sum, s) => sum + (s.price || 0), 0);
@@ -255,23 +303,7 @@ app.post('/generate-pitch-report', (req, res) => {
 
     const categoryCounts = countCalibrationCategories(billableCalibrations);
 
-    // Collapse not-triggered rows: one row per component, systems listed together
-    const notTriggeredRaw = calibrations_not_triggered || [];
-    const notTriggeredMap = new Map();
-    notTriggeredRaw.forEach(nt => {
-      const compKey = nt.component || nt.system || 'Unknown';
-      if (!notTriggeredMap.has(compKey)) {
-        notTriggeredMap.set(compKey, { component: compKey, systems: [], reason: nt.reason });
-      }
-      const entry = notTriggeredMap.get(compKey);
-      if (nt.system && !entry.systems.includes(nt.system)) entry.systems.push(nt.system);
-    });
-    const notTriggeredGrouped = Array.from(notTriggeredMap.values()).map(e => ({
-      component: e.component,
-      system: e.systems.join(', '),
-      systems: e.systems,
-      reason: e.reason
-    }));
+    const notTriggeredGrouped = groupNotTriggered(calibrations_not_triggered);
 
     const reportData = {
       // Vehicle
@@ -301,12 +333,19 @@ app.post('/generate-pitch-report', (req, res) => {
 
       // Summary counts
       total_calibrations: billableCalibrations.length,
-      total_line_items: billableCalibrations.length + 2,
+      total_line_items: billableCalibrations.length + (scansRequired ? 2 : 0),
+      scans_required: scansRequired,
+      show_line_items: scansRequired || billableCalibrations.length > 0,
+      post_scan_row_number: postScanRowNumber,
       consolidated_count: consolidatedCount,
       static_calibrations_count: categoryCounts['Static Calibration'],
       dynamic_calibrations_count: categoryCounts['Dynamic Calibration'],
       relearn_reset_calibrations_count: categoryCounts['Reset / Relearn / Initialization'],
       aim_mechanical_calibrations_count: categoryCounts['Aim / Mechanical Adjustment'],
+
+      // Verify on pre-scan (not billed)
+      verify_on_prescan: verifyRows,
+      verify_count: verifyRows.length,
 
       // Not triggered
       calibrations_not_triggered: notTriggeredGrouped,
@@ -337,3 +376,4 @@ app.listen(PORT, () => {
   console.log(`POST to http://localhost:${PORT}/generate-report with JSON body`);
   console.log(`POST to http://localhost:${PORT}/generate-pitch-report for pitch reports`);
 });
+

@@ -246,6 +246,40 @@
       vertical-align: top;
     }
 
+    /* ── VERIFY ON PRE-SCAN TABLE ── */
+    .verify-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+
+    .verify-table thead tr {
+      background: #fdf3dc;
+      color: #7a5a10;
+    }
+
+    .verify-table thead th {
+      padding: 5px 8px;
+      text-align: left;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .verify-table tbody td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #f3e6c4;
+      color: #555;
+      vertical-align: top;
+    }
+
+    .verify-table .not-billed {
+      color: #999;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
     /* ── BILLING SUMMARY ── */
     .billing-table {
       width: 100%;
@@ -487,7 +521,7 @@
 </div>
 
 <!-- REQUIRED CALIBRATIONS TABLE -->
-{{#if enriched_calibrations}}
+{{#if show_line_items}}
 <div class="section">
   <div class="section-title">Required ADAS Calibrations &amp; OEM Procedures</div>
   <table class="cal-table">
@@ -501,6 +535,7 @@
       </tr>
     </thead>
     <tbody>
+      {{#if scans_required}}
       <tr style="border-bottom:2px solid #f1b82d;">
         <td style="color:#888;font-weight:700;padding:7px 8px;">1</td>
         <td style="padding:7px 8px;">
@@ -513,10 +548,11 @@
         </td>
         <td class="right">{{currency pre_scan_price}}</td>
       </tr>
+      {{/if}}
       {{#each enriched_calibrations}}
       {{#unless this.consolidated}}
       <tr>
-        <td style="color:#888;font-weight:700;">{{inc (inc @index)}}</td>
+        <td style="color:#888;font-weight:700;">{{this.row_number}}</td>
         <td>
           <div class="system-name">{{this.service_name}}</div>
           {{#if this.alldata_component.location}}
@@ -555,8 +591,9 @@
       </tr>
       {{/unless}}
       {{/each}}
+      {{#if scans_required}}
       <tr style="border-top:2px solid #f1b82d;">
-        <td style="color:#888;font-weight:700;padding:7px 8px;">{{inc (inc total_calibrations)}}</td>
+        <td style="color:#888;font-weight:700;padding:7px 8px;">{{post_scan_row_number}}</td>
         <td style="padding:7px 8px;">
           <div class="system-name">Post-Repair Diagnostic Scan</div>
           <div class="system-detail">Verify all DTCs cleared and calibrations confirmed</div>
@@ -567,6 +604,7 @@
         </td>
         <td class="right">{{currency post_scan_price}}</td>
       </tr>
+      {{/if}}
       <tr style="background:#0a131e;">
         <td colspan="3"></td>
         <td style="padding:8px;color:#fff;font-weight:700;font-size:13px;">Total Recommended ADAS Reimbursement</td>
@@ -575,6 +613,46 @@
     </tbody>
   </table>
   <div class="rate-note" style="margin-top:6px;">All fees are subject to OEM procedure requirements and shop verification of installed equipment.</div>
+</div>
+{{/if}}
+
+<!-- VERIFY ON PRE-SCAN -->
+{{#if verify_on_prescan.length}}
+<div class="section">
+  <div class="section-title">Verify on Pre-Scan — Not Billed</div>
+  <table class="verify-table">
+    <thead>
+      <tr>
+        <th style="width:24%">Component</th>
+        <th style="width:18%">Possible System</th>
+        <th style="width:42%">Estimate Trigger &amp; Reason</th>
+        <th style="width:16%" class="right">If Confirmed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each verify_on_prescan}}
+      <tr>
+        <td>
+          <div class="system-name">{{this.component}}</div>
+          {{#if this.location}}<div class="system-detail">{{this.location}}</div>{{/if}}
+        </td>
+        <td>{{this.possible_system}}</td>
+        <td>
+          {{#if this.trigger}}<div class="trigger-text"><strong>Trigger:</strong> {{this.trigger}}</div>{{/if}}
+          <div class="trigger-text" style="margin-top:3px;">{{this.reason}}</div>
+        </td>
+        <td class="right">
+          {{#if this.price_if_confirmed}}
+          {{this.service_name_if_confirmed}}<br><span class="not-billed">{{currency this.price_if_confirmed}} — not in total</span>
+          {{else}}
+          <span class="not-billed">Not billed</span>
+          {{/if}}
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <div class="rate-note" style="margin-top:6px;">These components are triggered by this estimate, but build data could not confirm they are installed. Confirm on pre-scan; confirmed items will be added as supplements.</div>
 </div>
 {{/if}}
 
