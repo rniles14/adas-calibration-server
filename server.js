@@ -209,18 +209,22 @@ app.post('/generate-pitch-report', (req, res) => {
     let consolidatedCount = 0;
 
     enrichedCalibrations.forEach(cal => {
-      if (seenServiceIds.has(cal.service_id)) {
+      const componentName = (cal.alldata_component && cal.alldata_component.componentName) || cal.system;
+      const consolidationKey = `${cal.service_id}::${componentName}`;
+      if (seenServiceIds.has(consolidationKey)) {
         consolidatedCount++;
-        const keeper = billableCalibrations.find(c => c.service_id === cal.service_id);
+        const keeper = billableCalibrations.find(c => {
+          const kName = (c.alldata_component && c.alldata_component.componentName) || c.system;
+          return c.service_id === cal.service_id && kName === componentName;
+        });
         if (keeper) {
           keeper.covered_components = keeper.covered_components || [];
-          const name = (cal.alldata_component && cal.alldata_component.componentName) || cal.system;
-          if (name && !keeper.covered_components.includes(name)) {
-            keeper.covered_components.push(name);
+          if (componentName && !keeper.covered_components.includes(componentName)) {
+            keeper.covered_components.push(componentName);
           }
         }
       } else {
-        seenServiceIds.add(cal.service_id);
+        seenServiceIds.add(consolidationKey);
         cal.consolidated = false;
         billableCalibrations.push(cal);
       }
