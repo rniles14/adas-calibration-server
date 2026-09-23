@@ -135,7 +135,7 @@ app.post('/generate-report', (req, res) => {
       vehicle,
       repair_items_count: repair_items_count || 0,
       calibrations_required: calibrations_required || [],
-      calibrations_not_triggered: calibrations_not_triggered || [],
+      calibrations_not_triggered: notTriggeredGrouped,
       recommended_sequence: recommended_sequence || [],
       adas_systems_present: adas_systems_present || [],
       safety_systems_present: safety_systems_present || [],
@@ -202,24 +202,32 @@ app.post('/generate-pitch-report', (req, res) => {
     });
 
     // Consolidate billing: same service_id = one billable procedure.
-    // The calibration table still shows every triggered component,
-    // but only the first entry per service_id carries the price.
-    // The rest show "Included" so the shop sees coverage without double-billing.
+    // Merged duplicates are removed from the array entirely so that row
+    // numbering, counts, and totals all derive from the same final list.
     const seenServiceIds = new Set();
+    const billableCalibrations = [];
+    let consolidatedCount = 0;
+
     enrichedCalibrations.forEach(cal => {
       if (seenServiceIds.has(cal.service_id)) {
-        cal.consolidated = true;
-        cal.original_price = cal.price;
-        cal.price = null;
+        consolidatedCount++;
+        const keeper = billableCalibrations.find(c => c.service_id === cal.service_id);
+        if (keeper) {
+          keeper.covered_components = keeper.covered_components || [];
+          const name = (cal.alldata_component && cal.alldata_component.componentName) || cal.system;
+          if (name && !keeper.covered_components.includes(name)) {
+            keeper.covered_components.push(name);
+          }
+        }
       } else {
         seenServiceIds.add(cal.service_id);
         cal.consolidated = false;
+        billableCalibrations.push(cal);
       }
     });
 
     // Recalculate total after consolidation
-    const calibrationTotal = enrichedCalibrations.reduce((sum, c) => sum + (c.price || 0), 0);
-
+    const calibrationTotal = billableCalibrations.reduce((sum, c) => sum + (c.price || 0), 0);
 
     // Standing line items — pre first, post last
     const preItems = [
@@ -241,7 +249,25 @@ app.post('/generate-pitch-report', (req, res) => {
       allothers: 'Standard Rate'
     };
 
-    const categoryCounts = countCalibrationCategories(calibrations_required);
+    const categoryCounts = countCalibrationCategories(billableCalibrations);
+
+    // Collapse not-triggered rows: one row per component, systems listed together
+    const notTriggeredRaw = calibrations_not_triggered || [];
+    const notTriggeredMap = new Map();
+    notTriggeredRaw.forEach(nt => {
+      const compKey = nt.component || nt.system || 'Unknown';
+      if (!notTriggeredMap.has(compKey)) {
+        notTriggeredMap.set(compKey, { component: compKey, systems: [], reason: nt.reason });
+      }
+      const entry = notTriggeredMap.get(compKey);
+      if (nt.system && !entry.systems.includes(nt.system)) entry.systems.push(nt.system);
+    });
+    const notTriggeredGrouped = Array.from(notTriggeredMap.values()).map(e => ({
+      component: e.component,
+      system: e.systems.join(', '),
+      systems: e.systems,
+      reason: e.reason
+    }));
 
     const reportData = {
       // Vehicle
@@ -261,7 +287,7 @@ app.post('/generate-pitch-report', (req, res) => {
 
       // Pricing
       carrier_label: carrierLabels[carrierKey],
-      enriched_calibrations: enrichedCalibrations,
+      enriched_calibrations: billableCalibrations,
       pre_items: preItems,
       post_items: postItems,
       pre_scan_price: preItems[0] ? preItems[0].price : 0,
@@ -270,15 +296,16 @@ app.post('/generate-pitch-report', (req, res) => {
       grand_total: grandTotal,
 
       // Summary counts
-      total_calibrations: calibrations_required.length,
-      total_line_items: calibrations_required.length + 2,
+      total_calibrations: billableCalibrations.length,
+      total_line_items: billableCalibrations.length + 2,
+      consolidated_count: consolidatedCount,
       static_calibrations_count: categoryCounts['Static Calibration'],
       dynamic_calibrations_count: categoryCounts['Dynamic Calibration'],
       relearn_reset_calibrations_count: categoryCounts['Reset / Relearn / Initialization'],
       aim_mechanical_calibrations_count: categoryCounts['Aim / Mechanical Adjustment'],
 
       // Not triggered
-      calibrations_not_triggered: calibrations_not_triggered || [],
+      calibrations_not_triggered: notTriggeredGrouped,
 
       // Meta
       generated_date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
