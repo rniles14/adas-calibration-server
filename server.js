@@ -210,12 +210,12 @@ app.post('/generate-pitch-report', (req, res) => {
 
     enrichedCalibrations.forEach(cal => {
       const componentName = (cal.alldata_component && cal.alldata_component.componentName) || cal.system;
-      const consolidationKey = `${cal.service_id}::${componentName}`;
+      const consolidationKey = `${cal.service_id}::${componentName}::${cal.calibration_category}`;
       if (seenServiceIds.has(consolidationKey)) {
         consolidatedCount++;
         const keeper = billableCalibrations.find(c => {
           const kName = (c.alldata_component && c.alldata_component.componentName) || c.system;
-          return c.service_id === cal.service_id && kName === componentName;
+          return c.service_id === cal.service_id && kName === componentName && c.calibration_category === cal.calibration_category;
         });
         if (keeper) {
           keeper.covered_components = keeper.covered_components || [];
