@@ -67,6 +67,7 @@ const PRICE_TABLE = {
   S022: { name: 'EV-HV Off',                            partner: 150,  statefarm: 195,  geico: 195,  allothers: 195  },
   S023: { name: 'Front Wheel Alignment',                partner: 100,  statefarm: 100,  geico: 100,  allothers: 100  },
   S024: { name: 'All-Wheel Alignment',                  partner: 150,  statefarm: 150,  geico: 150,  allothers: 150  },
+  S025: { name: 'Front Radar – Dynamic',                partner: 180,  statefarm: 225,  geico: 270,  allothers: 300  },
 };
 
 // ─────────────────────────────────────────────
