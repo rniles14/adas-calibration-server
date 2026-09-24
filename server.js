@@ -278,17 +278,6 @@ app.post('/generate-pitch-report', (req, res) => {
     billableCalibrations.forEach((c, i) => { c.row_number = firstCalRow + i; });
     const postScanRowNumber = firstCalRow + billableCalibrations.length;
 
-    // Verify-on-pre-scan: triggered but equipment unconfirmed. Shown with the
-    // price it WOULD carry, never added to any total.
-    const verifyRows = (Array.isArray(verify_on_prescan) ? verify_on_prescan : []).map(v => {
-      const row = PRICE_TABLE[v.service_id_if_confirmed] || null;
-      return {
-        ...v,
-        service_name_if_confirmed: row ? row.name : null,
-        price_if_confirmed: row ? row[carrierKey] : null
-      };
-    });
-
 
     const preTotal = preItems.reduce((sum, s) => sum + (s.price || 0), 0);
     const postTotal = postItems.reduce((sum, s) => sum + (s.price || 0), 0);
@@ -342,10 +331,6 @@ app.post('/generate-pitch-report', (req, res) => {
       dynamic_calibrations_count: categoryCounts['Dynamic Calibration'],
       relearn_reset_calibrations_count: categoryCounts['Reset / Relearn / Initialization'],
       aim_mechanical_calibrations_count: categoryCounts['Aim / Mechanical Adjustment'],
-
-      // Verify on pre-scan (not billed)
-      verify_on_prescan: verifyRows,
-      verify_count: verifyRows.length,
 
       // Not triggered
       calibrations_not_triggered: notTriggeredGrouped,

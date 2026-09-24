@@ -617,45 +617,6 @@
 {{/if}}
 
 <!-- VERIFY ON PRE-SCAN -->
-{{#if verify_on_prescan.length}}
-<div class="section">
-  <div class="section-title">Verify on Pre-Scan — Not Billed</div>
-  <table class="verify-table">
-    <thead>
-      <tr>
-        <th style="width:24%">Component</th>
-        <th style="width:18%">Possible System</th>
-        <th style="width:42%">Estimate Trigger &amp; Reason</th>
-        <th style="width:16%" class="right">If Confirmed</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each verify_on_prescan}}
-      <tr>
-        <td>
-          <div class="system-name">{{this.component}}</div>
-          {{#if this.location}}<div class="system-detail">{{this.location}}</div>{{/if}}
-        </td>
-        <td>{{this.possible_system}}</td>
-        <td>
-          {{#if this.trigger}}<div class="trigger-text"><strong>Trigger:</strong> {{this.trigger}}</div>{{/if}}
-          <div class="trigger-text" style="margin-top:3px;">{{this.reason}}</div>
-        </td>
-        <td class="right">
-          {{#if this.price_if_confirmed}}
-          {{this.service_name_if_confirmed}}<br><span class="not-billed">{{currency this.price_if_confirmed}} — not in total</span>
-          {{else}}
-          <span class="not-billed">Not billed</span>
-          {{/if}}
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-  <div class="rate-note" style="margin-top:6px;">These components are triggered by this estimate, but build data could not confirm they are installed. Confirm on pre-scan; confirmed items will be added as supplements.</div>
-</div>
-{{/if}}
-
 <!-- NOT TRIGGERED -->
 {{#if calibrations_not_triggered.length}}
 <div class="section">
